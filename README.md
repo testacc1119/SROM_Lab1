@@ -1,4 +1,4 @@
-# SROM 
+# SROM Дигас Богдан ФІ-03
 ## Lab 1
 ### Implemented all these features:
 

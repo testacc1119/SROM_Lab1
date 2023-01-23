@@ -98,7 +98,7 @@ private:
 InfInt::InfInt()
 {
     value.push_back(0);
-};
+}
 
 InfInt::InfInt(const std::string& s)
 {
@@ -108,7 +108,7 @@ InfInt::InfInt(const std::string& s)
         value.push_back(s[i] == '1');
     }
     truncate_front_zeros();
-};
+}
 
 InfInt::InfInt(int i)
 {
@@ -118,12 +118,12 @@ InfInt::InfInt(int i)
         i /= 2;
         value.push_front(remainder);
     } while(i != 0);
-};
+}
 
 InfInt::InfInt(const InfInt& ii)
 {
     this->value = ii.value;
-};
+}
 
 /* private functions */
 
@@ -340,7 +340,7 @@ InfInt InfInt::operator>>(const int& i) const
         result.value.pop_back();
     }
     return result;
-};
+}
 
 InfInt& InfInt::operator>>=(const int& i)
 {
@@ -350,7 +350,7 @@ InfInt& InfInt::operator>>=(const int& i)
         this->value.pop_back();
     }
     return *this;
-};
+}
 
 InfInt InfInt::operator<<(const int& i) const
 {
@@ -374,7 +374,7 @@ InfInt& InfInt::operator<<=(const int& i)
 inline size_t InfInt::size() const
 {   
     return value.size();
-};
+}
 
 /* power */
 
@@ -471,29 +471,29 @@ InfInt add_mod(const InfInt& a, const InfInt& b, const InfInt& n)
 {
     InfInt mu = Mu(n);
     return Barret_redc( Barret_redc(a, n, mu) + Barret_redc(b , n, mu), n, mu);
-};
+}
 
 InfInt sub_mod(const InfInt& a, const InfInt& b, const InfInt& n)
 {
     InfInt mu = Mu(n);
     return Barret_redc( Barret_redc(a, n, mu) - Barret_redc(b , n, mu), n, mu);
-};
+}
 
 InfInt mult_mod(const InfInt& a, const InfInt& b, const InfInt& n)
 {
     InfInt mu = Mu(n);
     return Barret_redc( Barret_redc(a, n, mu) * Barret_redc(b , n, mu), n, mu);
-};
+}
 
 InfInt gcdEuclid(const InfInt& a, const InfInt& b)
 {
     return (b == 0) ? a : gcdEuclid(b, a % b);
-};
+}
 
 InfInt lcmEuclid(const InfInt& a, const InfInt& b)
 {
     return (a * b) / gcdEuclid(a, b);
-};
+}
 
 InfInt gcdBinary(InfInt a, InfInt b)
 {
@@ -520,7 +520,7 @@ InfInt gcdBinary(InfInt a, InfInt b)
         }
     }
     return d * a;
-};
+}
 
 InfInt lcmBinary(const InfInt& a, const InfInt& b)
 {
@@ -532,7 +532,7 @@ InfInt Mu(const InfInt& ii)
     InfInt mu = 1 << (ii.size() * 2); // 2^(2k)
     mu = mu / ii; // / n
     return mu;
-};
+}
 
 InfInt Barret_redc(const InfInt& x, const InfInt& n, const InfInt& mu)
 {
@@ -568,4 +568,4 @@ InfInt power_Barret_mod2(const InfInt& _a, const InfInt& b, const InfInt& n) // 
             result = Barret_redc(result * result, n, m);
     }
     return result;
-};
+}
