@@ -53,6 +53,9 @@ public:
     std::string to_hex_string() const;
     int to_int() const;
 
+    /* hex string support */
+    void read_from_hex_string(const std::string& s);
+
 private:
     /* helper functions to deal with different size numbers */
     void resize_front(const size_t& new_size, bool filler);
@@ -173,7 +176,7 @@ InfInt InfInt::operator*(const InfInt& ii) const // LongMul
     return result;
 } 
 
-InfInt InfInt::operator/(const InfInt& ii) const
+InfInt InfInt::operator/(const InfInt& ii) const // LongDiv1
 {
     if(ii == 0)
         throw std::invalid_argument("cannot divide by 0");
@@ -365,7 +368,7 @@ std::string InfInt::to_string() const
 
 std::string InfInt::to_hex_string() const
 {
-    std::string result = "0x";
+    std::string result;
     size_t four_remainder = size() % 4;
     std::deque<bool>operational_value = value;
     if(four_remainder > 0)
@@ -374,7 +377,7 @@ std::string InfInt::to_hex_string() const
         int window_decimal_value = (operational_value[i] * 8) + (operational_value[i+1] * 4) + (operational_value[i+2] * 2) + (operational_value[i+3] * 1);
         if(window_decimal_value < 10)
             result += std::to_string(window_decimal_value);
-        else result += ('a' + window_decimal_value % 10);
+        else result += ('A' + window_decimal_value % 10);
     }
     return result;
 }
@@ -390,6 +393,29 @@ int InfInt::to_int() const // NOTE: would be a good idea to implement exceptions
             break;
     }
     return result;
+}
+
+/* hex string support */
+
+void InfInt::read_from_hex_string(const std::string& s)
+{
+    value.clear();
+    int temp_int;
+    for(int i = s.size() - 1; i >= 0; --i){
+        if( ((int) s[i] > 47) && ((int) s[i] < 58) ) // 57th characters in ASCII Table is '9', so if 'a' is 9 or less, and 48th char is ASCII is '0', so if 'a' is 0 or greater
+            temp_int = (int) s[i] - (int) '0'; // essentially we find the distance from '0' to 'a', which is '0'-'9', which basically gives us int number a that it represents
+        else if( ((int) s[i]) > 64 && ((int) s[i] < 70) ) // checking if 'a' is bound by 'A' and 'F'
+            temp_int =  10 + (int) s[i] - (int) 'A'; // once again, finding the distance from 'A' to char 'a' and + 10
+        else throw std::invalid_argument("hexadecimal string contains unsupported characters");
+
+        bool remainder = false; // modified int to binary converter (always runs 4 cycles, which is enough for our maximum 15)
+        for(int j = 0; j < 4; ++j){
+            remainder = temp_int % 2;
+            temp_int /= 2;
+            value.push_front(remainder);
+        }
+    }
+    truncate_front_zeros();
 }
 
 //////////// NON-MEMBER OPERATORS ////////////
