@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream> // just for exceptions
 
+/////////////////////// Lab 1 functionality ///////////////////////
 
 /* constructors */
 

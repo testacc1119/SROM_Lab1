@@ -7,13 +7,16 @@ class InfInt
 {
 
 public:
+
+/////////////////////// Lab 1 functionality ///////////////////////
+
     /* constructors */
     InfInt();
     InfInt(const std::string& s);
     InfInt(int i);
     InfInt(const InfInt& ii);
 
-    /* operators */                    // Lab 1 Functionality
+    /* operators */
     InfInt& operator=(const InfInt& ii);
     InfInt operator+(const InfInt& ii) const;
     InfInt operator-(const InfInt& ii) const;
