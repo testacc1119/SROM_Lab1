@@ -12,4 +12,4 @@
 
 * string, int (int to string is easily implemented by the user) and hexadecimal string coversions
 
-..* sidenote: oldest positive bit is always the first one, so no need to implement search for it
+⋅⋅* sidenote: oldest positive bit is always the first one, so no need to implement search for it
