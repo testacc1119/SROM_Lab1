@@ -13,3 +13,10 @@
 * Binary string, int (int to string is easily implemented by the user) and hexadecimal string conversions
 
 * sidenote: oldest positive bit is always the first one, so no need to implement search for it
+
+## Lab 2
+### Implemented all these features:
+
+* Addition, subtraction, multiplication, power using Barret reduction
+
+* gcd, lcm by Euclidian and binary methods 
