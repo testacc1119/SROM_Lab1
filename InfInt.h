@@ -164,7 +164,7 @@ InfInt InfInt::operator+(const InfInt& ii) const
     for(int i = lhs.size() - 1; i >= 0; --i){
         temp = (int) lhs.value[i] + (int) rhs.value[i] + carry;
         result.value.push_front(temp & 1); // if the result of addition is 01, we capture 0[1] bit
-        carry = temp >> 1; // the the result of addition is 01, we capture [0]1 bit (01) >> 1 = (0)
+        carry = temp / 2; // the the result of addition is 01, we capture [0]1 bit (01) >> 1 = (0)
     }
     if(carry)
         result.value.push_front(true);
@@ -418,8 +418,8 @@ std::string InfInt::to_hex_string() const
     std::string result;
     size_t four_remainder = size() % 4;
     std::deque<bool>operational_value = value;
-    if(four_remainder > 0)
-        operational_value.insert(value.begin(), four_remainder, false);
+    for(int i = 0; i < four_remainder; ++i)
+        operational_value.push_front(false);
     for(int i = 0; i < operational_value.size() - 3; i += 4){
         int window_decimal_value = (operational_value[i] * 8) + (operational_value[i+1] * 4) + (operational_value[i+2] * 2) + (operational_value[i+3] * 1);
         if(window_decimal_value < 10)
@@ -451,9 +451,13 @@ void InfInt::read_from_hex_string(const std::string& s)
     for(int i = s.size() - 1; i >= 0; --i){
         if( ((int) s[i] > 47) && ((int) s[i] < 58) ) // 57th characters in ASCII Table is '9', so if 'a' is 9 or less, and 48th char is ASCII is '0', so if 'a' is 0 or greater
             temp_int = (int) s[i] - (int) '0'; // essentially we find the distance from '0' to 'a', which is '0'-'9', which basically gives us int number a that it represents
-        else if( ((int) s[i]) > 64 && ((int) s[i] < 70) ) // checking if 'a' is bound by 'A' and 'F'
+        else if( ((int) s[i]) > 64 && ((int) s[i] < 71) ) // checking if 'a' is bound by 'A' and 'F'
             temp_int =  10 + (int) s[i] - (int) 'A'; // once again, finding the distance from 'A' to char 'a' and + 10
-        else throw std::invalid_argument("hexadecimal string contains unsupported characters");
+        else if( ((int) s[i]) > 96 && ((int) s[i] < 103) ) // checking if 'a' is bound by 'a' and 'f'
+            temp_int =  10 + (int) s[i] - (int) 'a'; // once again, finding the distance from 'a' to char 'a' and + 10
+        else {std::cout << "Invalid " << s[i] << "\t";
+        throw std::invalid_argument("hexadecimal string contains unsupported characters at ");
+        }
 
         bool remainder = false; // modified int to binary converter (always runs 4 cycles, which is enough for our maximum 15)
         for(int j = 0; j < 4; ++j){
@@ -567,5 +571,5 @@ InfInt power_Barret_mod2(const InfInt& _a, const InfInt& b, const InfInt& n) // 
         if(i != 0) 
             result = Barret_redc(result * result, n, m);
     }
-    return result;
+    return result.truncate_front_zeros();
 }

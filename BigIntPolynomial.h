@@ -305,7 +305,7 @@ inline size_t BigIntPol::size() const
 
 BigIntPol BigIntPol::square() const
 {
-    std::vector<bool> double_sized_result = get_double_sized(this->value);
+    std::vector<bool> double_sized_result (2*field_pow, false);
     for(int i = 0; i < field_pow; ++i)
         double_sized_result[i * 2] = value[i];
     mod_p(double_sized_result);
