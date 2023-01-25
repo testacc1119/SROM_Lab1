@@ -6,13 +6,12 @@
 
 ////////////////////////// Lab 3 //////////////////////////
 
-#define field_pow 251 // 7 variant: 251; usual macros syntax
+#define field_pow 251 // 7 variant: 251; usual macros syntax is __MACRO
 
 
 /* bitwise operators on vector<bool> */
 
 static std::vector<bool> shiftL(const std::vector<bool>& v, const int& shift);
-static std::vector<bool> shiftR(const std::vector<bool>& v, const int& shift);
 
 // return v mod p, where p is polynomial generator
 void mod_p(const std::vector<bool>& v);
