@@ -6,7 +6,7 @@
 
 ////////////////////////// Lab 3 //////////////////////////
 
-#define __FIELD_POWER 251 // 7 variant: 251; usual macros syntax
+#define field_pow 251 // 7 variant: 251; usual macros syntax
 
 
 /* bitwise operators on vector<bool> */
@@ -101,29 +101,29 @@ std::vector<bool> shiftL(const std::vector<bool>& ii, const int& shift)
 
 void mod_p(std::vector<bool>& value)
 {
-    std::vector<bool> p (2*__FIELD_POWER, false);
-    p[0] = p[1] = p[4] = p[14] = p[__FIELD_POWER] = 1; // x^251 + x^14 + x^4 + x + 1
+    std::vector<bool> p (2*field_pow, false);
+    p[0] = p[1] = p[4] = p[14] = p[field_pow] = 1; // x^251 + x^14 + x^4 + x + 1
     //x^0  x^1    x^4    x^14          x^251
     /* if(value < p)
         return; */
-    for(int i = 2*__FIELD_POWER - 1; i >= __FIELD_POWER; --i){
-        // value = value ^ (p << 2*__FIELD_POWER - __FIELD_POWER)
+    for(int i = 2*field_pow - 1; i >= field_pow; --i){
+        // value = value ^ (p << 2*field_pow - field_pow)
         if(value[i])
-            value = plus(value, shiftL(p, i - __FIELD_POWER)); 
+            value = plus(value, shiftL(p, i - field_pow)); 
     }
 }
 std::vector<bool> get_double_sized(const std::vector<bool>& v)
 {
-    std::vector<bool> result(2*__FIELD_POWER, false);
-    for(int i = 0; i < __FIELD_POWER; ++i)
+    std::vector<bool> result(2*field_pow, false);
+    for(int i = 0; i < field_pow; ++i)
         result[i] = v[i];
     return result;
 }
 
 std::vector<bool> discard_to_normal(const std::vector<bool>& v)
 {
-    std::vector<bool> result(__FIELD_POWER, false);
-    for(int i = 0; i < __FIELD_POWER; ++i)
+    std::vector<bool> result(field_pow, false);
+    for(int i = 0; i < field_pow; ++i)
         result[i] = v[i];
     return result;
 }
@@ -158,17 +158,17 @@ bool operator<=(const std::vector<bool>& lhs, const std::vector<bool>& rhs)
 
 /* constructors */
 
-BigIntPol::BigIntPol() : value(__FIELD_POWER, false) {};
+BigIntPol::BigIntPol() : value(field_pow, false) {};
 
 BigIntPol::BigIntPol(const std::string& s)
 {
-    /* if(s.size() >= __FIELD_POWER){
-        std::vector<bool> v (__FIELD_POWER, false);
+    /* if(s.size() >= field_pow){
+        std::vector<bool> v (field_pow, false);
         value = v;
         return;
     };
  */
-    value = std::vector<bool>(__FIELD_POWER, false);
+    value = std::vector<bool>(field_pow, false);
     int j = 0;
     for(int i = s.size() - 1; i >= 0; --i, j++){
         value[j] = (s[i] == '1'); // number are represented "101100..00"
@@ -196,7 +196,7 @@ BigIntPol& BigIntPol::operator=(const BigIntPol& ii)
 BigIntPol BigIntPol::operator+(const BigIntPol& ii) const
 {
     BigIntPol result;
-    for(int i = 0; i < __FIELD_POWER; ++i){
+    for(int i = 0; i < field_pow; ++i){
         result.value[i] =  (this->value[i]) ^ (ii.value[i]);
     }
     return result;
@@ -204,10 +204,10 @@ BigIntPol BigIntPol::operator+(const BigIntPol& ii) const
 
 BigIntPol BigIntPol::operator*(const BigIntPol& ii) const // LongMul
 {
-    std::vector<bool> double_sized_result (2*__FIELD_POWER, false);
+    std::vector<bool> double_sized_result (2*field_pow, false);
     std::vector<bool> double_sized_lhs = get_double_sized(this->value);
     std::vector<bool> double_sized_rhs = get_double_sized(ii.value);
-    for(int i = 0; i < 2*__FIELD_POWER; ++i, double_sized_lhs = shiftL(double_sized_lhs, 1))
+    for(int i = 0; i < 2*field_pow; ++i, double_sized_lhs = shiftL(double_sized_lhs, 1))
     {
         if(double_sized_rhs[i])
             double_sized_result = plus(double_sized_result, double_sized_lhs);
@@ -224,7 +224,7 @@ BigIntPol BigIntPol::operator*(const BigIntPol& ii) const // LongMul
 
 bool BigIntPol::operator==(const BigIntPol& ii) const
 {
-    for(int i = 0; i < __FIELD_POWER; ++i){
+    for(int i = 0; i < field_pow; ++i){
         if(this->value[i] != ii.value[i]){
             return false;
         }
@@ -239,7 +239,7 @@ bool BigIntPol::operator!=(const BigIntPol& ii) const
 
 bool BigIntPol::operator<(const BigIntPol& ii) const
 {
-    for(int i = __FIELD_POWER - 1; i >= 0; --i){
+    for(int i = field_pow - 1; i >= 0; --i){
         if(value[i] != ii.value[i])
             return ii.value[i]; // if we found different bits, it's either (1,[0]) (first is bigger), or (0,[1]) (second is bigger), so we return only second bit
     }
@@ -266,7 +266,7 @@ bool BigIntPol::operator<=(const BigIntPol& ii) const
 BigIntPol BigIntPol::operator~() const
 {
     BigIntPol result;
-    for(int i = 0; i < __FIELD_POWER; ++i)
+    for(int i = 0; i < field_pow; ++i)
         result.value[i] = !value[i];
     return result;
 }
@@ -274,7 +274,7 @@ BigIntPol BigIntPol::operator~() const
 BigIntPol BigIntPol::operator&(const BigIntPol& ii) const
 {
     BigIntPol result;
-    for(int i = 0; i < __FIELD_POWER; ++i)
+    for(int i = 0; i < field_pow; ++i)
         result.value[i] = value[i] & ii.value[i];
     return result;
 }
@@ -282,7 +282,7 @@ BigIntPol BigIntPol::operator&(const BigIntPol& ii) const
 BigIntPol BigIntPol::operator|(const BigIntPol& ii) const
 {
     BigIntPol result;
-    for(int i = 0; i < __FIELD_POWER; ++i)
+    for(int i = 0; i < field_pow; ++i)
         result.value[i] = value[i] | ii.value[i];
     return result;
 }
@@ -290,7 +290,7 @@ BigIntPol BigIntPol::operator|(const BigIntPol& ii) const
 BigIntPol BigIntPol::operator^(const BigIntPol& ii) const
 {
     BigIntPol result;
-    for(int i = 0; i < __FIELD_POWER; ++i)
+    for(int i = 0; i < field_pow; ++i)
         result.value[i] = value[i] ^ ii.value[i];
     return result;
 }
@@ -307,7 +307,7 @@ inline size_t BigIntPol::size() const
 BigIntPol BigIntPol::square() const
 {
     std::vector<bool> double_sized_result = get_double_sized(this->value);
-    for(int i = 0; i < __FIELD_POWER; ++i)
+    for(int i = 0; i < field_pow; ++i)
         double_sized_result[i * 2] = value[i];
     mod_p(double_sized_result);
     std::vector<bool> normal_sized_result = discard_to_normal(double_sized_result);
@@ -320,7 +320,7 @@ BigIntPol BigIntPol::square() const
 /* BigIntPol BigIntPol::inverse() const // Horner
 {
     BigIntPol result("1"); // our multiplication identity
-    for(int i = 0; i < __FIELD_POWER - 1; ++i){
+    for(int i = 0; i < field_pow - 1; ++i){
         result = result * *this;
         result = result.square();
     }
